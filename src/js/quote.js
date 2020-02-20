@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 /*
 * Objectif : récupérer une citation aléatoire à partir d'une API et l'afficher
 *
@@ -6,3 +8,50 @@
 * 2- Récupérer une citation aléatoire à partir de l'API de QuotesOnDesign (https://quotesondesign.com/api/)
 * 3- Afficher la citation
 * */
+
+export default class Quote {
+	constructor(){
+		this.initEls();
+		this.initEvents();
+	}
+
+
+	initEls () {
+		this.Els = {
+			quoteText: $('.js-quote-text'),
+			quoteAuthor: $('.js-quote-author'),
+			container: $('.js-container')
+		}
+
+	}
+
+	initEvents() {
+		this.getQuote();
+
+	}
+
+	getQuote() {
+		const api = {
+			endpoint: 'https://quotesondesign.com/wp-json/wp/v2/posts/?orderby=rand',
+			params: {
+				'per_page':1,
+			},
+		};
+
+		$.ajaxSetup({cache:false});
+
+		$.getJSON(api.endpoint, api.params)
+		.then((response) => {
+			this.renderQuote(response[0].content.rendered,response[0].title.rendered);
+		})
+		.catch((e) => {
+			console.log('error with the quote :', e);
+		});
+	}
+
+    renderQuote (quote, author) {
+        this.Els.quoteText.prepend(quote);
+        this.Els.quoteAuthor.text(author);
+        this.Els.container.addClass('is-ready');
+	}
+}

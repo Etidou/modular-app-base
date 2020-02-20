@@ -1,4 +1,5 @@
 import '../css/app.scss';
+import Background from './background';
 
 class App {
     constructor () {
@@ -6,7 +7,9 @@ class App {
     }
 
     initApp () {
-      // Start application
+        // Start applicationn
+
+        new Background();
     }
 }
 
