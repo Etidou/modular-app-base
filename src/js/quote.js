@@ -9,7 +9,7 @@ import $ from 'jquery';
 * 3- Afficher la citation
 * */
 
-export default class Quote {
+export default class Nba {
 	constructor(){
 		this.initEls();
 		this.initEvents();
@@ -18,21 +18,23 @@ export default class Quote {
 
 	initEls () {
 		this.Els = {
-			quoteText: $('.js-quote-text'),
-			quoteAuthor: $('.js-quote-author'),
+			cityText: $('.js-city'),
+			clubName: $('.js-name-club'),
+			conferenceText: $('.js-conference'),
+
 			container: $('.js-container')
 		}
 
 	}
 
 	initEvents() {
-		this.getQuote();
+		this.getNba();
 
 	}
 
-	getQuote() {
+	getNba() {
 		const api = {
-			endpoint: 'https://quotesondesign.com/wp-json/wp/v2/posts/?orderby=rand',
+			endpoint: 'https://www.balldontlie.io/api/v1/teams',
 			params: {
 				'per_page':1,
 			},
@@ -40,18 +42,31 @@ export default class Quote {
 
 		$.ajaxSetup({cache:false});
 
+
+		// $.ajax({url : api.endpoint,
+		// 	data: api.params},
+		// 	headers:{
+  //   		'x-rapidapi-host': 'api-nba-v1.p.rapidapi.com',
+  //   		'x-rapidapi-key': '51f1c1baddmsh02e892b0bd99394p10ae11jsn80c5aa2b10d4'
+  // 			});
+
 		$.getJSON(api.endpoint, api.params)
 		.then((response) => {
-			this.renderQuote(response[0].content.rendered,response[0].title.rendered);
+			console.log(response);
+			this.renderNba(response.data[0].city,response.data[0].full_name,response.data[0].conference);
 		})
 		.catch((e) => {
 			console.log('error with the quote :', e);
 		});
 	}
 
-    renderQuote (quote, author) {
-        this.Els.quoteText.prepend(quote);
-        this.Els.quoteAuthor.text(author);
+    renderNba (city, club, conference) {
+        this.Els.cityText.text(city);
+        this.Els.clubName.text(club);
+        this.Els.conferenceText.text(conference);
+        
+
+
         this.Els.container.addClass('is-ready');
 	}
 }
